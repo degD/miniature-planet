@@ -18,9 +18,6 @@
 #    coordinates as zeroes. Finally, return the final product and that's it. A game of life algorithm.
 
 
-from multiprocessing.sharedctypes import Value
-
-
 class GameOfLife(object):
     """A class for the game of life algorithm.
 
@@ -28,14 +25,20 @@ class GameOfLife(object):
         object (class): Sub-class of object.
     """
     def __init__(self, array):
-        """Initialize a GameOfLife instance.
+        """Initializes a GameOfLife instance.
 
         Args:
             array (list): Assumes array is a 2-dimensional list of zeroes and ones.
         """
+        # Some tests...
         if type(array) != list:
-            raise ValueError
-        
+            raise ValueError('Array is not a 2D-list!')
+        try:
+            if type(array[0]) != list:
+                raise ValueError('Array is not a 2D-list!')
+        except (IndexError,TypeError):
+            raise ValueError('Array is not a 2D-list!')
+
         self.__alive = []
         
         y_len = len(array)
@@ -52,6 +55,8 @@ class GameOfLife(object):
                     continue
                 else:
                     raise ValueError
+        # When you enter an empty 2d-list like [[]], because x_len is zero, 
+        # it will just skip the second for loop.
                             
         # Locating and saving the important coordinates.
         self.__important = []
@@ -109,10 +114,10 @@ class GameOfLife(object):
     # And then create the result list. Set n=0 to return the current state.
     def tick(self, n, prt=False):
         """Returns the n-th iteration of game of life as a list, similar to
-        the list that the class is instanced. Keep in mind that n
+        the list that the class is instanced.
 
         Args:
-            n (int): Number of iterations. 0 to return the current state.
+            n (int): Number of iterations. 0 to return the current state. Should be zero or greater.
             prt (bool, optional): If True, prints the resulting list in a nice way. Skips if all 
             are dead. Defaults to False.
 
@@ -122,10 +127,10 @@ class GameOfLife(object):
         """
         
         # Some tests...
-        if type(n) != type(int):
-            raise ValueError
+        if type(n) != int:
+            raise ValueError('n is not an integer!')
         if n < 0:
-            raise ValueError
+            raise ValueError('n should be great or equal to zero.')
         
         for _ in range(n):
             self.__single_tick()
